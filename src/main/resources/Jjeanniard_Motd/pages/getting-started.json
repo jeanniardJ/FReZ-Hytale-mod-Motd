@@ -1,0 +1,10 @@
+{
+  "Id": "getting-started",
+  "Title": "Premiers pas",
+  "Summary": "Installation du serveur et navigation de base.",
+  "Text": [
+    "Respectez le code de conduite et les autres explorateurs.",
+    "Utilisez /spawn pour retourner au point de départ et /map pour voir le territoire.",
+    "Reportez les bugs via le canal de support ou l'interface web."
+  ]
+}

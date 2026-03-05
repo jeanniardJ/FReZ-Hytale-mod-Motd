@@ -1,0 +1,10 @@
+$C = "../Common.ui";
+
+Group {
+  Anchor: (Height: 32);
+  Button #BoutonSection {
+    Anchor: (Width: 0, Height: 30);
+    Text: "Section";
+    Style: (FontSize: 14, TextColor: #f7fafc, Background: #1f2d44(0.9));
+  }
+}

@@ -1,14 +1,103 @@
 $C = "../Common.ui";
 
 Group {
-  Anchor: (Width: 400, Height: 300);
-  Background: #141c26(0.98);
+  Anchor: (Width: 560, Height: 430);
+  Background: #0c111b(0.95);
   LayoutMode: Top;
-  Padding: (Full: 20);
+  LayoutGap: 10;
+  Padding: (Full: 18);
 
-  Label {
-    Text: "Selectionnez un element:";
+  Label #TitrePrincipal {
+    Text: "Guide d'aide";
     Anchor: (Height: 30);
-    Style: (FontSize: 16, TextColor: #ffffff);
+    Style: (FontSize: 18, TextColor: #f4f6f9);
+  }
+
+  Label #SousTitre {
+    Text: "Naviguez dans le sommaire pour afficher les sections disponibles.";
+    Anchor: (Height: 18);
+    Style: (FontSize: 13, TextColor: #aeb9c6);
+  }
+
+  Group {
+    LayoutMode: Horizontal;
+    LayoutGap: 12;
+
+    Group #SommairePanel {
+      Anchor: (Width: 240);
+      Background: #111b26(0.85);
+      Padding: (Full: 10);
+      LayoutMode: Top;
+      LayoutGap: 6;
+
+      Label {
+        Text: "Sommaire";
+        Anchor: (Height: 22);
+        Style: (FontSize: 15, TextColor: #f7fafc);
+      }
+
+      Label #SommaireVide {
+        Text: "";
+        Anchor: (Height: 20);
+        Style: (FontSize: 12, TextColor: #9aa6b6);
+      }
+
+      Group #SommaireList {
+        LayoutMode: Top;
+        LayoutGap: 6;
+        Scrollable: true;
+        Clipping: true;
+        Anchor: (Height: 260);
+      }
+    }
+
+    Group #DetailsPanel {
+      Anchor: (Width: 280);
+      Background: #111b26(0.85);
+      Padding: (Full: 10);
+      LayoutMode: Top;
+      LayoutGap: 6;
+
+      Label #DetailsTitre {
+        Text: "Sommaire";
+        Anchor: (Height: 24);
+        Style: (FontSize: 16, TextColor: #f4f6f9);
+      }
+
+      Label #DetailsResume {
+        Text: "";
+        Anchor: (Height: 18);
+        Style: (FontSize: 13, TextColor: #d4d9e3);
+      }
+
+      Group #DetailsBody {
+        LayoutMode: Top;
+        LayoutGap: 6;
+        Scrollable: true;
+        Clipping: true;
+        Anchor: (Height: 220);
+      }
+
+      Label #DetailsEmpty {
+        Text: "";
+        Anchor: (Height: 20);
+        Style: (FontSize: 12, TextColor: #9aa6b6);
+      }
+    }
+  }
+
+  Group {
+    LayoutMode: Horizontal;
+    LayoutGap: 8;
+
+    Button #BoutonRetour {
+      Text: "Retour";
+      Anchor: (Width: 100, Height: 32);
+    }
+
+    Button #BoutonFermer {
+      Text: "Fermer";
+      Anchor: (Width: 100, Height: 32);
+    }
   }
 }

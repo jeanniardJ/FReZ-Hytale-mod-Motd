@@ -13,22 +13,25 @@ import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
 import com.hypixel.hytale.server.core.ui.builder.UIEventBuilder;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.jjeanniard.plugins.config.MotdConfig;
+import com.jjeanniard.plugins.Motd;
 import com.jjeanniard.plugins.config.MotdPageContent;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
-// Cette classe gère l'affichage et la logique de l'interface utilisateur (UI) du Message du Jour (Motd).
+// Cette classe gère l'affichage et la logique de l'interface utilisateur (UI) du menu d'aide Motd.
 public class UiMotd extends InteractiveCustomUIPage<UiMotd.PageData> {
 
     public static final String LAYOUT = "Motd/Motd.ui";
+    private static final String SUMMARY_ENTRY = "Motd/SummaryEntry.ui";
+    private static final String DETAIL_LINE = "Motd/DetailLine.ui";
 
-    private final MotdConfig config; // Stockage de la configuration
+    private final Motd plugin;
+    private String selectedPageId;
 
-    // Constructeur de la page.
-    public UiMotd(@Nonnull PlayerRef playerRef, MotdConfig config) {
+    public UiMotd(@Nonnull PlayerRef playerRef, Motd plugin) {
         super(playerRef, CustomPageLifetime.CanDismiss, PageData.CODEC);
-        this.config = config;
+        this.plugin = plugin;
     }
 
     @Override
@@ -38,32 +41,66 @@ public class UiMotd extends InteractiveCustomUIPage<UiMotd.PageData> {
             @Nonnull UIEventBuilder evt,
             @Nonnull Store<EntityStore> store
     ) {
-        // Charger le layout de base
         cmd.append(LAYOUT);
+        List<MotdPageContent> pages = plugin.getPages();
 
-//        for(MotdPageContent pages : config.getPages()){
-//            cmd.set("#Motd.Titre", pages.getTitle());
-//            for(String page: pages.getText()){
-//                cmd.set("#Motd.Texte", page);
-//            }
-//        }
-        cmd.append("#Motd", "Motd/Template.ui");
-//        for (int i = 0; i < config.getPages().length; i++) {
-//            String selecteur = "#Motd[" + i + "]";
-//            cmd.append(selecteur, "Motd/Template.ui");
-//            cmd.set(selecteur + ".Titre", config.getPages()[i].getTitle());
-//            for (int j = 0; j < config.getPages()[i].getText().length; j++) {
-//                cmd.set(selecteur + ".Texte[" + j + "]", config.getPages()[i].getText()[j]);
-//            }
-//
-//            evt.addEventBinding(CustomUIEventBindingType.Activating, selecteur + ".BoutonFermer", new PageData().setAction("fermer"), false);
-//        }
+        if (pages.isEmpty()) {
+            cmd.set("#SommaireVide.Text", "Aucune section definie pour le moment.");
+        } else {
+            cmd.set("#SommaireVide.Text", "");
+            for (int i = 0; i < pages.size(); i++) {
+                MotdPageContent page = pages.get(i);
+                String entrySelector = "#SommaireList[" + i + "]";
+                cmd.append("#SommaireList", SUMMARY_ENTRY);
+                cmd.set(entrySelector + ".BoutonSection.Text", page.getTitle());
+                cmd.set(entrySelector + ".BoutonSection.Tooltip", page.getSummary());
+                evt.addEventBinding(
+                        CustomUIEventBindingType.Activating,
+                        entrySelector + ".BoutonSection",
+                        new PageData().setAction("open").setPageId(page.getId()).toEventData(),
+                        false
+                );
+            }
+        }
 
-        // Lier le bouton Fermer
+        if (selectedPageId == null) {
+            cmd.set("#DetailsTitre.Text", "Sommaire");
+            cmd.set("#DetailsResume.Text", "Choisissez une section dans la colonne de gauche pour voir les détails.");
+            cmd.set("#DetailsEmpty.Text", pages.isEmpty() ? "Il n'y a pas encore de page importée." : "Sélectionnez une section.");
+        } else {
+            MotdPageContent chosen = plugin.getPageById(selectedPageId);
+            if (chosen == null) {
+                cmd.set("#DetailsTitre.Text", "Page introuvable");
+                cmd.set("#DetailsResume.Text", "");
+                cmd.set("#DetailsEmpty.Text", "La page demandée a été supprimée.");
+            } else {
+                cmd.set("#DetailsTitre.Text", chosen.getTitle());
+                cmd.set("#DetailsResume.Text", chosen.getSummary());
+                String[] body = chosen.getText();
+                if (body != null && body.length > 0) {
+                    for (int line = 0; line < body.length; line++) {
+                        String detailSelector = "#DetailsBody[" + line + "]";
+                        cmd.append("#DetailsBody", DETAIL_LINE);
+                        cmd.set(detailSelector + ".Ligne.Text", body[line]);
+                    }
+                    cmd.set("#DetailsEmpty.Text", "");
+                } else {
+                    cmd.set("#DetailsEmpty.Text", "Aucun contenu n'a été défini pour cette section.");
+                }
+            }
+        }
+
+        evt.addEventBinding(
+                CustomUIEventBindingType.Activating,
+                "#BoutonRetour",
+                new PageData().setAction("back").toEventData(),
+                false
+        );
+
         evt.addEventBinding(
                 CustomUIEventBindingType.Activating,
                 "#BoutonFermer",
-                new PageData().setAction("fermer"),
+                new PageData().setAction("fermer").toEventData(),
                 false
         );
     }
@@ -74,29 +111,69 @@ public class UiMotd extends InteractiveCustomUIPage<UiMotd.PageData> {
             @Nonnull Store<EntityStore> store,
             @Nonnull PageData data
     ) {
-        if ("fermer".equals(data.action)) {
+        if (data == null) {
+            return;
+        }
+        String action = data.getAction();
+        if ("fermer".equals(action)) {
             this.close();
+            return;
+        }
+        if ("back".equals(action)) {
+            this.selectedPageId = null;
+            rebuild();
+            return;
+        }
+        if ("open".equals(action)) {
+            String pageId = data.getPageId();
+            if (pageId != null) {
+                this.selectedPageId = pageId;
+                rebuild();
+            }
         }
     }
 
-    // Classe interne pour les données d'événement
     public static class PageData {
         private String action;
+        private String pageId;
 
-        public static final BuilderCodec<PageData> CODEC = BuilderCodec.builder(
-                        PageData.class, PageData::new
-                )
+        public static final BuilderCodec<PageData> CODEC = BuilderCodec.builder(PageData.class, PageData::new)
                 .append(new KeyedCodec<>("Action", Codec.STRING), (e, v) -> e.action = v, e -> e.action)
+                .add()
+                .append(new KeyedCodec<>("PageId", Codec.STRING), (e, v) -> e.pageId = v, e -> e.pageId)
                 .add()
                 .build();
 
         public PageData() {
         }
 
-        // Méthode utilitaire pour le chaînage (Fluent API)
-        public EventData setAction(String action) {
+        public String getAction() {
+            return action;
+        }
+
+        public String getPageId() {
+            return pageId;
+        }
+
+        public PageData setAction(String action) {
             this.action = action;
-            return null;
+            return this;
+        }
+
+        public PageData setPageId(String pageId) {
+            this.pageId = pageId;
+            return this;
+        }
+
+        public EventData toEventData() {
+            EventData data = new EventData();
+            if (action != null) {
+                data.put("Action", action);
+            }
+            if (pageId != null) {
+                data.put("PageId", pageId);
+            }
+            return data;
         }
     }
 }

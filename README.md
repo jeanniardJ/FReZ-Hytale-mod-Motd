@@ -1,59 +1,63 @@
-# 📢 Motd Plugin pour Hytale
+# Motd Plugin pour Hytale
 
-Bienvenue sur le dépôt du plugin **Motd** pour Hytale ! Ce projet permet aux joueurs d'accéder facilement aux informations du serveur via une interface graphique dédiée.
+Ce plugin expose un menu d'aide multi-pages directement dans le jeu. Il donne accès à un sommaire, des pages détaillées avec retour au sommaire, une navigation scrollable et des raccourcis `/motd`, `/info` et `/help` (la commande reste réservée aux joueurs afin de ne pas interférer avec la commande `help` administrateur).
 
-## 📝 Description
+## Fonctionnalités
+- Interface graphique simple avec un sommaire à gauche et l'aperçu d'une section à droite.
+- Chargement du contenu depuis des fichiers JSON (un fichier principal + une collection de pages).
+- Possibilité d'ajouter un fichier JSON par page, de placer chaque section dans `Jjeanniard_Motd/pages`.
+- Bouton « Retour » pour revenir au sommaire et bouton « Fermer » pour quitter le menu.
 
-Le plugin **Motd** ajoute une commande simple qui ouvre une fenêtre sur l'écran du joueur. Cette interface affiche les données et informations existantes du serveur, permettant aux joueurs de consulter les détails importants sans quitter le jeu.
+## Commandes disponibles
+- `/motd`
+- `/info`
+- `/help` (alias joueur, la commande admin demeure inchangée grâce à la restriction au GameMode Adventure)
 
-### Fonctionnalités principales :
-*   **Interface Graphique (GUI)** : Affiche une fenêtre d'information propre et lisible.
-*   **Commande Simple** : Accessible via la commande `/motd`.
-*   **Affichage de Données** : Présente les informations actuelles du serveur aux joueurs.
+Ces commandes ouvrent toutes la même interface `UiMotd` et s'appuient sur la configuration JSON chargée au démarrage.
 
----
+## Navigation
+1. Ouvrez `/motd` (ou `/info` ou `/help`) pour afficher l'interface d'aide.
+2. Cliquez sur une section du sommaire pour charger ses détails dans la colonne de droite.
+3. Utilisez le bouton « Retour » pour revenir au sommaire ou « Fermer » pour quitter.
 
-## 🚀 Installation
+## Configuration JSON
 
-1.  Téléchargez la dernière version du plugin (`.jar`) depuis la section [Releases](https://github.com/votre-repo/releases).
-2.  Placez le fichier `.jar` dans le dossier `mods` ou `plugins` de votre serveur Hytale.
-3.  Redémarrez votre serveur.
+### Fichier principal
+`src/main/resources/Jjeanniard_Motd/Motd.json` contient un tableau `Motd` de sections par défaut. Chaque section doit exposer :
 
----
-
-## 🎮 Utilisation
-
-Pour ouvrir la fenêtre d'information du serveur, tapez simplement la commande suivante dans le chat en jeu :
-
+```json
+{
+  "Id": "identifiant",
+  "Title": "Titre affiché",
+  "Summary": "Résumé court visible dans le sommaire",
+  "Text": [
+    "Ligne 1",
+    "Ligne 2"
+  ]
+}
 ```
-/motd
-```
 
-Une fenêtre apparaîtra alors à l'écran avec les informations du serveur.
+### Pages supplémentaires
+Copiez ou créez un fichier JSON par page dans `src/main/resources/Jjeanniard_Motd/pages/`. Lors de la première exécution, ces fichiers sont copiés dans le dossier de données `MotdPages` et sont chargés automatiquement au démarrage.
 
----
+### Ajouter ou modifier une page
+1. Ajoutez un fichier `pages/votre-page.json` avec la structure ci-dessus.
+2. Redémarrez le serveur (la configuration est lue au démarrage, mais les fichiers supplémentaires peuvent être modifiés directement dans `MotdPages` après le premier lancement).
 
-## 🛠️ Développement
-
+## Développement
 ### Prérequis
-*   Java 25 SDK
-*   Hytale Server (Early Access)
+- Java 25 SDK
+- Hytale Server (instance `release` ou `pre-release`)
 
 ### Compilation
-Pour compiler le projet vous-même :
 ```bash
 ./gradlew build
 ```
-Le fichier compilé se trouvera dans `build/libs/`.
 
----
+Le fichier compilé se trouve dans `build/libs/`.
 
-## 🤝 Contribution
+## Contribution
+Les contributions sont bienvenues. Ouvrez une *issue* pour signaler un bug ou soumettre une *pull request* pour ajouter des contenus et formes d'aide supplémentaires.
 
-Les contributions sont les bienvenues ! N'hésitez pas à ouvrir une "Issue" pour signaler un bug ou proposer une fonctionnalité, ou à soumettre une "Pull Request".
-
----
-
-## 📄 Licence
-
-Ce projet est sous licence [MIT](LICENSE).
+## Licence
+Ce projet est distribué sous licence MIT (voir le fichier `LICENSE`).

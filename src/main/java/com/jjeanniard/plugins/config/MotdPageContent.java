@@ -1,5 +1,6 @@
 package com.jjeanniard.plugins.config;
 
+import com.google.gson.annotations.SerializedName;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
@@ -16,31 +17,42 @@ import com.hypixel.hytale.codec.builder.BuilderCodec;
  * }
  */
 public class MotdPageContent {
-    // Le titre de la page (ex: "Règles du serveur")
+    @SerializedName("Id")
+    private String id;
+
+    @SerializedName("Title")
     private String title;
-    // Les lignes de texte de la page (tableau de chaînes de caractères)
+
+    @SerializedName("Summary")
+    private String summary;
+
+    @SerializedName("Text")
     private String[] text;
 
     // --- DÉFINITION DU CODEC ---
     // Le BuilderCodec permet de dire à Hytale comment transformer cette classe en JSON et inversement.
     public static final BuilderCodec<MotdPageContent> CODEC = BuilderCodec.builder(MotdPageContent.class, MotdPageContent::new)
             .append(
-                    // 1. Gestion du Titre
-                    // On associe la clé JSON "Title" à un Codec de type String (Texte).
+                    new KeyedCodec<>("Id", Codec.STRING),
+                    (e, v) -> e.id = v,
+                    e -> e.id
+            )
+            .add()
+            .append(
                     new KeyedCodec<>("Title", Codec.STRING),
-                    // Setter : Quand on lit le JSON, on met la valeur (v) dans le champ 'title' de l'objet (e)
                     (e, v) -> e.title = v,
-                    // Getter : Quand on écrit le JSON, on récupère la valeur du champ 'title' de l'objet (e)
                     e -> e.title
             )
             .add()
             .append(
-                    // 2. Gestion du Texte
-                    // On associe la clé JSON "Text" à un Codec de type Tableau de String (STRING_ARRAY).
+                    new KeyedCodec<>("Summary", Codec.STRING),
+                    (e, v) -> e.summary = v,
+                    e -> e.summary
+            )
+            .add()
+            .append(
                     new KeyedCodec<>("Text", Codec.STRING_ARRAY),
-                    // Setter : On remplit le tableau 'text' avec la valeur lue (v)
                     (e, v) -> e.text = v,
-                    // Getter : On lit le tableau 'text' pour le sauvegarder
                     e -> e.text
             )
             .add()
@@ -50,18 +62,36 @@ public class MotdPageContent {
     // Il est utilisé par le Codec lors de la création de l'objet, mais aussi pour définir les valeurs par défaut
     // si le fichier de configuration n'existe pas encore.
     public MotdPageContent() {
-        this.title = "Règles de Développement";
+        this.id = "rules";
+        this.title = "Règles de développement";
+        this.summary = "Bonnes pratiques générales et attentes du serveur.";
         this.text = new String[]{
-                "1. Toujours commenter le code.",
-                "2. Il faut commenter le code pour un dev junior dans tout le projet."
+                "1. Toujours commenter les sections complexes.",
+                "2. Chaque zone doit rester compréhensible par un développeur junior."
         };
     }
 
     // --- GETTERS ---
     // Permettent de lire les valeurs depuis d'autres parties du plugin.
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getTitle() {
         return title;
+    }
+
+    public String getSummary() {
+        return summary != null ? summary : "";
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 
     public String[] getText() {

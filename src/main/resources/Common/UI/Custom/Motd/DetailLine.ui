@@ -1,0 +1,10 @@
+$C = "../Common.ui";
+
+Group {
+  Anchor: (Height: 20);
+  Label #Ligne {
+    Text: "Paragraphe";
+    Anchor: (Height: 20);
+    Style: (FontSize: 13, TextColor: #d5dfec);
+  }
+}

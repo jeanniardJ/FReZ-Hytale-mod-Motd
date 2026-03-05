@@ -54,4 +54,8 @@ public class MotdConfig {
     public MotdPageContent[] getPages() {
         return pages;
     }
+
+    public void setPages(MotdPageContent[] pages) {
+        this.pages = pages != null ? pages : new MotdPageContent[0];
+    }
 }

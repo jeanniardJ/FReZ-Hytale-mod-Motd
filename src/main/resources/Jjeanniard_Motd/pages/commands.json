@@ -1,0 +1,10 @@
+{
+  "Id": "basic-commands",
+  "Title": "Commandes utiles",
+  "Summary": "Rappel rapide pour les actions classiques.",
+  "Text": [
+    "/motd | /info | /help : Ouvrir ce menu d'aide.",
+    "/spawn : Revenir au dernier point de spawn.",
+    "/mail : Consulter votre boîte de réception intégrée."
+  ]
+}

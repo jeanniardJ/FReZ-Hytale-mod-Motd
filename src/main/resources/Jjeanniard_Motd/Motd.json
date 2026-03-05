@@ -1,19 +1,12 @@
 {
-  "motd": [
+  "Motd": [
     {
-      "Tilte": "Titre de la Page",
+      "Id": "welcome",
+      "Title": "Bienvenue",
+      "Summary": "Tour rapide pour bien débuter.",
       "Text": [
-        "blalal",
-        "dkskd",
-        "..."
-      ]
-    },
-    {
-      "Tilte": "Titre de la Page",
-      "Text": [
-        "blalal",
-        "dkskd",
-        "..."
+        "Bienvenue sur le serveur !",
+        "Le menu d'aide est disponible via /motd, /info ou /help."
       ]
     }
   ]
