@@ -1,5 +1,5 @@
 {
-    "Group": "com.jjeanniard",
+    "Group": "Jjeanniard",
     "Name": "Motd",
     "Version": "0.0.2",
     "Description": "Motd Plugin for Hytale",
@@ -17,6 +17,6 @@
         
     },
     "DisabledByDefault": false,
-    "Main": "com.jjeanniard.plugin.motd",
+    "Main": "com.jjeanniard.plugins.Motd",
     "IncludesAssetPack": true
 }

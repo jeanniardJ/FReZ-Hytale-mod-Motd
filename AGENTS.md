@@ -11,3 +11,19 @@ Le développement de plugins pour Hytale repose principalement sur l'architectur
 
 ### Règle d'or :
 **Séparez les données de la logique.** Vos composants doivent être de simples conteneurs de données, et vos systèmes doivent gérer tout le comportement. Évitez de créer des classes "monolithes" qui mélangent état et logique, car cela va à l'encontre du modèle ECS.
+
+<!-- Inclusion de l'exemple ECS -->
+@./ecs_example.md
+
+## Structure du Projet
+
+*   **Langage** : Le code source est écrit en **Java**.
+*   **Emplacement** : Les fichiers sources se trouvent dans le répertoire `src/main/java/`.
+
+## Dépendances
+
+*   **Bibliothèque Hytale** : Le développement des plugins doit être réalisé en utilisant la bibliothèque Hytale.
+
+## Documentation et Commentaires
+
+*   **Commentez pour un Développeur Junior** : Le code doit être abondamment commenté pour être compréhensible par un développeur débutant. Expliquez chaque étape complexe, non seulement *ce que* le code fait, mais surtout *pourquoi* il le fait. L'objectif est de rendre le projet accessible et maintenable par n'importe qui, quel que soit son niveau d'expérience.

@@ -12,7 +12,7 @@ import com.hypixel.hytale.server.core.ecs.Component;
 
 public class ThirstComponent extends Component {
     private int currentThirst;
-    private int maxThirst;
+    private final int maxThirst;
 
     public ThirstComponent(int maxThirst) {
         this.maxThirst = maxThirst;
@@ -62,7 +62,7 @@ Il faut attacher le composant aux joueurs et enregistrer le système.
 // Dans votre classe principale (extends JavaPlugin)
 
 @Override
-protected void setup() {
+private void setup() {
     // Enregistrer le système dans le monde du serveur
     getServer().getWorld().addSystem(new ThirstSystem());
     

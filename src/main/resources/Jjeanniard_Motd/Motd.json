@@ -1,6 +1,20 @@
 {
-  "rulesMotd" : [
-    "Voici les regles du serveur.",
-    "test lolilol"
+  "motd": [
+    {
+      "Tilte": "Titre de la Page",
+      "Text": [
+        "blalal",
+        "dkskd",
+        "..."
+      ]
+    },
+    {
+      "Tilte": "Titre de la Page",
+      "Text": [
+        "blalal",
+        "dkskd",
+        "..."
+      ]
+    }
   ]
 }
