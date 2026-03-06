@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FReZ Motd - Générateur de Pages</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: #2d2d2d;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            width: 100%;
+            max-width: 800px;
+        }
+        h1 {
+            color: #55ffff;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #aaaaaa;
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 0.8rem;
+            background-color: #1a1a1a;
+            border: 1px solid #444;
+            border-radius: 4px;
+            color: #fff;
+            box-sizing: border-box;
+        }
+        .text-lines {
+            margin-top: 1rem;
+        }
+        .text-line {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        .btn-add {
+            background-color: #55ff55;
+            color: #1a1a1a;
+        }
+        .btn-add:hover {
+            background-color: #44cc44;
+        }
+        .btn-remove {
+            background-color: #ff5555;
+            color: white;
+        }
+        .btn-generate {
+            background-color: #55ffff;
+            color: #1a1a1a;
+            width: 100%;
+            margin-top: 1.5rem;
+            font-size: 1.1rem;
+        }
+        .btn-download {
+            background-color: #ffa500;
+            color: #1a1a1a;
+            width: 100%;
+            margin-top: 1rem;
+            display: none;
+        }
+        .output-container {
+            margin-top: 2rem;
+            background-color: #1a1a1a;
+            padding: 1rem;
+            border-radius: 4px;
+            border: 1px solid #444;
+            position: relative;
+        }
+        pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            color: #00ff00;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .copy-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background-color: #444;
+            color: white;
+            padding: 0.3rem 0.6rem;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>FReZ Motd - Générateur de Pages</h1>
+        
+        <div class="form-group">
+            <label for="title">Titre de la page</label>
+            <input type="text" id="title" placeholder="Ex: Commandes de Base" oninput="updateSlug()">
+        </div>
+
+        <div class="form-group">
+            <label for="id">Identifiant (Slug)</label>
+            <input type="text" id="id" placeholder="Ex: commandes-base">
+        </div>
+
+        <div class="form-group">
+            <label for="summary">Résumé (Description courte)</label>
+            <textarea id="summary" rows="2" placeholder="Ex: Liste des commandes essentielles pour débuter sur le serveur."></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Contenu (Lignes de texte)</label>
+            <div id="text-lines" class="text-lines">
+                <div class="text-line">
+                    <input type="text" class="content-line" placeholder="Ligne 1...">
+                    <button class="btn btn-remove" onclick="removeLine(this)">✕</button>
+                </div>
+            </div>
+            <button class="btn btn-add" onclick="addLine()" style="margin-top: 0.5rem;">+ Ajouter une ligne</button>
+        </div>
+
+        <button class="btn btn-generate" onclick="generateJson()">Générer le JSON</button>
+        <button id="download-btn" class="btn btn-download" onclick="downloadJson()">Télécharger le fichier .json</button>
+
+        <div class="output-container" id="output-box" style="display:none;">
+            <button class="copy-btn" onclick="copyToClipboard()">Copier</button>
+            <pre id="json-output"></pre>
+        </div>
+    </div>
+
+    <script>
+        function updateSlug() {
+            const title = document.getElementById('title').value;
+            const slug = title.toLowerCase()
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/^-+|-+$/g, '');
+            document.getElementById('id').value = slug;
+        }
+
+        function addLine() {
+            const container = document.getElementById('text-lines');
+            const div = document.createElement('div');
+            div.className = 'text-line';
+            div.innerHTML = `
+                <input type="text" class="content-line" placeholder="Nouvelle ligne...">
+                <button class="btn btn-remove" onclick="removeLine(this)">✕</button>
+            `;
+            container.appendChild(div);
+        }
+
+        function removeLine(btn) {
+            btn.parentElement.remove();
+        }
+
+        function generateJson() {
+            const title = document.getElementById('title').value;
+            const id = document.getElementById('id').value;
+            const summary = document.getElementById('summary').value;
+            const lines = Array.from(document.getElementsByClassName('content-line'))
+                .map(input => input.value)
+                .filter(val => val.trim() !== "");
+
+            const data = {
+                "Id": id,
+                "Title": title,
+                "Summary": summary,
+                "Text": lines
+            };
+
+            const json = JSON.stringify(data, null, 2);
+            document.getElementById('json-output').textContent = json;
+            document.getElementById('output-box').style.display = 'block';
+            document.getElementById('download-btn').style.display = 'block';
+        }
+
+        function copyToClipboard() {
+            const text = document.getElementById('json-output').textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                alert("JSON copié dans le presse-papier !");
+            });
+        }
+
+        function downloadJson() {
+            const text = document.getElementById('json-output').textContent;
+            const id = document.getElementById('id').value || 'motd-page';
+            const blob = new Blob([text], {type: 'application/json'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${id}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>
