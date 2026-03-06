@@ -1,6 +1,6 @@
 {
-    "Group": "Jjeanniard",
-    "Name": "Motd",
+    "Group": "com.jjeanniard.plugins",
+    "Name": "FReZ-Hytale-mod-Motd",
     "Version": "0.0.2",
     "Description": "Motd Plugin for Hytale",
     "Authors": [

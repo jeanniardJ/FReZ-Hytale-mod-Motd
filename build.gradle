@@ -167,6 +167,9 @@ tasks.register('runServer', JavaExec) {
     
     // Convert the program parameters string into a list of arguments
     args createServerRunArguments(sourceSets.main.output.classesDirs.first().absolutePath, patchline).split(' ')
+
+    // Permet d'interagir avec la console du serveur
+    standardInput = System.in
 }
 
 // Configuration for the decompiler tool

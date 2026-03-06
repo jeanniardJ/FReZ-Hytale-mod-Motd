@@ -1,103 +1,84 @@
 $C = "../Common.ui";
 
-Group {
-  Anchor: (Width: 560, Height: 430);
-  Background: #0c111b(0.95);
-  LayoutMode: Top;
-  LayoutGap: 10;
-  Padding: (Full: 18);
+$C.@DecoratedContainer {
+    @Title = "Guide d'aide";
+    Anchor: (Width: 750, Height: 560);
+    @CloseButton #BoutonFermer {}
 
-  Label #TitrePrincipal {
-    Text: "Guide d'aide";
-    Anchor: (Height: 30);
-    Style: (FontSize: 18, TextColor: #f4f6f9);
-  }
-
-  Label #SousTitre {
-    Text: "Naviguez dans le sommaire pour afficher les sections disponibles.";
-    Anchor: (Height: 18);
-    Style: (FontSize: 13, TextColor: #aeb9c6);
-  }
-
-  Group {
-    LayoutMode: Horizontal;
-    LayoutGap: 12;
-
-    Group #SommairePanel {
-      Anchor: (Width: 240);
-      Background: #111b26(0.85);
-      Padding: (Full: 10);
-      LayoutMode: Top;
-      LayoutGap: 6;
-
-      Label {
-        Text: "Sommaire";
-        Anchor: (Height: 22);
-        Style: (FontSize: 15, TextColor: #f7fafc);
-      }
-
-      Label #SommaireVide {
-        Text: "";
-        Anchor: (Height: 20);
-        Style: (FontSize: 12, TextColor: #9aa6b6);
-      }
-
-      Group #SommaireList {
+    Group {
         LayoutMode: Top;
-        LayoutGap: 6;
-        Scrollable: true;
-        Clipping: true;
-        Anchor: (Height: 260);
-      }
+        Padding: (Full: 16);
+
+        Label #TitrePrincipal { 
+            Text: "Guide d'aide"; 
+            Style: (FontSize: 18); 
+        }
+
+        Label #SousTitre {
+            Anchor: (Top: 20);
+            Text: "Naviguez dans le sommaire pour afficher les sections disponibles."; 
+            Style: (FontSize: 13);
+        }
+
+        Group {
+            LayoutMode: Left;
+            FlexWeight: 1;
+            Padding: (Top: 12);
+
+            // --- PANNEAU DE GAUCHE : SOMMAIRE ---
+            Group #SommairePanel {
+                Anchor: (Width: 200);
+                LayoutMode: Top;
+                Padding: (Left: 10);
+
+                Label { 
+                    Text: "Sommaire"; 
+                    Padding: (Bottom: 6);
+                }
+
+                // Ré-ajout de l'élément manquant pour éviter le crash
+                Label #SommaireVide {
+                    Text: "";
+                    Style: (FontSize: 12);
+                }
+
+                Group #SommaireList {
+                    LayoutMode: TopScrolling;
+                    FlexWeight: 1;
+                    Background: #000000(0.1);
+                    Padding: (Full: 4);
+                }
+            }
+
+            // --- PANNEAU DE DROITE : DÉTAILS ---
+            Group #DetailsPanel {
+                FlexWeight: 1;
+                LayoutMode: Top;
+                Padding: (Left: 20);
+
+                Label #DetailsTitre { 
+                    Text: "Détails"; 
+                    Padding: (Bottom: 4);
+                }
+
+                Label #DetailsResume { 
+                    Text: ""; 
+                    Padding: (Bottom: 8);
+                }
+
+                Group #DetailsBody {
+                    LayoutMode: TopScrolling;
+                    FlexWeight: 1;
+                    Background: #000000(0.02);
+                    Padding: (Full: 6);
+                }
+
+                // Ré-ajout également de DetailsEmpty qui pourrait aussi causer un crash
+                Label #DetailsEmpty {
+                    Text: "";
+                    Style: (FontSize: 12);
+                }
+            }
+        }
     }
-
-    Group #DetailsPanel {
-      Anchor: (Width: 280);
-      Background: #111b26(0.85);
-      Padding: (Full: 10);
-      LayoutMode: Top;
-      LayoutGap: 6;
-
-      Label #DetailsTitre {
-        Text: "Sommaire";
-        Anchor: (Height: 24);
-        Style: (FontSize: 16, TextColor: #f4f6f9);
-      }
-
-      Label #DetailsResume {
-        Text: "";
-        Anchor: (Height: 18);
-        Style: (FontSize: 13, TextColor: #d4d9e3);
-      }
-
-      Group #DetailsBody {
-        LayoutMode: Top;
-        LayoutGap: 6;
-        Scrollable: true;
-        Clipping: true;
-        Anchor: (Height: 220);
-      }
-
-      Label #DetailsEmpty {
-        Text: "";
-        Anchor: (Height: 20);
-        Style: (FontSize: 12, TextColor: #9aa6b6);
-      }
-    }
-  }
-
-  Group {
-    LayoutMode: Horizontal;
-    LayoutGap: 8;
-
-    Button #BoutonRetour {
-      Text: "Retour";
-      Anchor: (Width: 100, Height: 32);
-    }
-
-    Button #BoutonFermer {
-      Text: "Fermer";
-      Anchor: (Width: 100, Height: 32);
-    }
-  }
 }

@@ -52,11 +52,11 @@ public class UiMotd extends InteractiveCustomUIPage<UiMotd.PageData> {
                 MotdPageContent page = pages.get(i);
                 String entrySelector = "#SommaireList[" + i + "]";
                 cmd.append("#SommaireList", SUMMARY_ENTRY);
-                cmd.set(entrySelector + ".BoutonSection.Text", page.getTitle());
-                cmd.set(entrySelector + ".BoutonSection.Tooltip", page.getSummary());
+                cmd.set(entrySelector + " #BoutonSection.Text", page.getTitle());
+                cmd.set(entrySelector + " #BoutonSection.TooltipText", page.getSummary());
                 evt.addEventBinding(
                         CustomUIEventBindingType.Activating,
-                        entrySelector + ".BoutonSection",
+                        entrySelector + " #BoutonSection",
                         new PageData().setAction("open").setPageId(page.getId()).toEventData(),
                         false
                 );
@@ -81,7 +81,7 @@ public class UiMotd extends InteractiveCustomUIPage<UiMotd.PageData> {
                     for (int line = 0; line < body.length; line++) {
                         String detailSelector = "#DetailsBody[" + line + "]";
                         cmd.append("#DetailsBody", DETAIL_LINE);
-                        cmd.set(detailSelector + ".Ligne.Text", body[line]);
+                        cmd.set(detailSelector + " #Ligne.Text", body[line]);
                     }
                     cmd.set("#DetailsEmpty.Text", "");
                 } else {
@@ -89,13 +89,6 @@ public class UiMotd extends InteractiveCustomUIPage<UiMotd.PageData> {
                 }
             }
         }
-
-        evt.addEventBinding(
-                CustomUIEventBindingType.Activating,
-                "#BoutonRetour",
-                new PageData().setAction("back").toEventData(),
-                false
-        );
 
         evt.addEventBinding(
                 CustomUIEventBindingType.Activating,
