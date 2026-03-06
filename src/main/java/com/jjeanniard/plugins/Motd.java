@@ -46,42 +46,54 @@ public class Motd extends JavaPlugin {
 
     public Motd(@Nonnull JavaPluginInit init) {
         super(init);
-        this.rulesMotd = this.withConfig("Motd", MotdConfig.CODEC);
+        // Utilisation de "motd" en minuscules pour suivre les conventions Hytale
+        this.rulesMotd = this.withConfig("motd", MotdConfig.CODEC);
     }
 
     @Override
     protected void setup() {
-        LOGGER.atInfo().log("Plugin en cours de démarrage …");
+        getLogger().at(Level.INFO).log("Démarrage du plugin Motd...");
         OpenUICommand helpCommand = new OpenUICommand(this);
         getCommandRegistry().registerCommand(helpCommand);
-        LOGGER.atInfo().log("Commandes publiées.");
+        getLogger().at(Level.INFO).log("Commandes Motd enregistrées.");
     }
 
     @Override
     protected void start() {
-        LOGGER.atInfo().log("Plugin démarré");
+        getLogger().at(Level.INFO).log("Initialisation des données du plugin Motd...");
 
-        Path configPath = getDataDirectory().resolve("Motd.json");
-        if (!Files.exists(configPath)) {
-            rulesMotd.save();
-            LOGGER.atInfo().log("Fichier de configuration par défaut créé.");
+        // S'assurer que le dossier de données existe
+        Path dataDir = getDataDirectory();
+        if (!Files.exists(dataDir)) {
+            try {
+                Files.createDirectories(dataDir);
+            } catch (IOException e) {
+                getLogger().at(Level.SEVERE).log("Impossible de créer le dossier de données : " + e.getMessage());
+            }
         }
 
-        Path dataPagesDir = getDataDirectory().resolve(DATA_PAGES_FOLDER);
+        // Vérifier si le fichier de config existe, sinon le forcer à se créer
+        Path configPath = dataDir.resolve("motd.json");
+        if (!Files.exists(configPath)) {
+            rulesMotd.save();
+            getLogger().at(Level.INFO).log("Fichier de configuration 'motd.json' généré par défaut.");
+        }
+
+        Path dataPagesDir = dataDir.resolve(DATA_PAGES_FOLDER);
         try {
             ensurePageDirectory(dataPagesDir);
         } catch (IOException e) {
-            LOGGER.at(Level.WARNING).log("Impossible de créer le dossier des pages : {}", e.getMessage());
+            getLogger().at(Level.WARNING).log("Erreur lors de la préparation du dossier des pages : " + e.getMessage());
         }
 
         rebuildPageCache(dataPagesDir);
         logPages();
-        LOGGER.atInfo().log("Fin du démarrage du plugin");
+        getLogger().at(Level.INFO).log("Plugin Motd opérationnel.");
     }
 
     @Override
     protected void shutdown() {
-        LOGGER.atInfo().log("Plugins shutdown!");
+        getLogger().at(Level.INFO).log("Arrêt du plugin Motd.");
     }
 
     public List<MotdPageContent> getPages() {

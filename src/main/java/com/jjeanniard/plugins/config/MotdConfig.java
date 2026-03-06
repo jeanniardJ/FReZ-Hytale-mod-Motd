@@ -47,8 +47,10 @@ public class MotdConfig {
             .build();
 
     public MotdConfig() {
-        // On initialise la liste pour éviter les erreurs si la config est vide
-        this.pages = new MotdPageContent[0];
+        // On initialise avec une page par défaut pour que le fichier soit créé avec du contenu
+        this.pages = new MotdPageContent[] {
+            new MotdPageContent()
+        };
     }
 
     public MotdPageContent[] getPages() {
